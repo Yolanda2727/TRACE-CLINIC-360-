@@ -96,6 +96,8 @@ Si el entorno no reconoce el comando `streamlit`, usa:
 python -m streamlit run app.py
 ```
 
+Nota para Streamlit Community Cloud: la base de datos SQLite local funciona para demostración, pero su contenido puede perderse cuando la aplicación se reinicia o se vuelve a desplegar. Para persistencia real se requiere una base de datos externa.
+
 ## Advertencia ética y clínica
 
 Este software es un **prototipo académico y demostrativo**. No debe utilizarse como sistema clínico real sin validación técnica, jurídica, ética, institucional y de seguridad informática.
