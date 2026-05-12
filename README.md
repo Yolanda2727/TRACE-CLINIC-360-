@@ -72,8 +72,10 @@ pip install -r requirements.txt
 5. Ejecutar la aplicación:
 
 ```bash
-streamlit run app.py
+python -m streamlit run app.py
 ```
+
+La aplicación crea automáticamente la base de datos SQLite en la carpeta `data/` del proyecto.
 
 ## Uso en Streamlit Cloud
 
@@ -87,6 +89,12 @@ app.py
 ```
 
 5. Desplegar la aplicación.
+
+Si el entorno no reconoce el comando `streamlit`, usa:
+
+```bash
+python -m streamlit run app.py
+```
 
 ## Advertencia ética y clínica
 

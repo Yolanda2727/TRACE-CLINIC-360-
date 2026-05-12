@@ -4,6 +4,7 @@ import plotly.express as px
 import sqlite3
 import uuid
 from datetime import datetime
+from pathlib import Path
 from fpdf import FPDF
 
 # =========================================================
@@ -16,7 +17,12 @@ st.set_page_config(
     layout="wide"
 )
 
-DB_NAME = "trace_clinic.db"
+BASE_DIR = Path(__file__).resolve().parent
+DATA_DIR = BASE_DIR / "data"
+DATA_DIR.mkdir(exist_ok=True)
+
+DB_NAME = DATA_DIR / "trace_clinic.db"
+PDF_FILE_NAME = "reporte_trace_clinic.pdf"
 
 
 # =========================================================
@@ -220,7 +226,7 @@ def limpiar_texto(texto):
     return texto
 
 
-def generar_pdf(df, nombre_archivo="reporte_trace_clinic.pdf"):
+def generar_pdf(df):
     pdf = FPDF()
     pdf.add_page()
 
@@ -260,8 +266,7 @@ def generar_pdf(df, nombre_archivo="reporte_trace_clinic.pdf"):
         pdf.multi_cell(0, 6, limpiar_texto(texto))
         pdf.ln(3)
 
-    pdf.output(nombre_archivo)
-    return nombre_archivo
+    return pdf.output(dest="S").encode("latin-1")
 
 
 # =========================================================
@@ -620,7 +625,7 @@ elif menu == "Reporte":
         st.dataframe(df_reporte, use_container_width=True)
 
         if st.button("Generar reporte PDF"):
-            archivo = generar_pdf(df_reporte)
+            pdf_bytes = generar_pdf(df_reporte)
 
             insertar_auditoria(
                 usuario,
@@ -629,13 +634,12 @@ elif menu == "Reporte":
                 f"Se genero reporte para {seleccion}"
             )
 
-            with open(archivo, "rb") as f:
-                st.download_button(
-                    label="Descargar reporte PDF",
-                    data=f,
-                    file_name=archivo,
-                    mime="application/pdf"
-                )
+            st.download_button(
+                label="Descargar reporte PDF",
+                data=pdf_bytes,
+                file_name=PDF_FILE_NAME,
+                mime="application/pdf"
+            )
 
         csv = df_reporte.to_csv(index=False).encode("utf-8")
 
